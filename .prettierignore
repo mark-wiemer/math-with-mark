@@ -1,4 +1,4 @@
-# When changing this file, consider updating .prettierignore
+# When changing this file, consider updating .gitignore
 
 # dependencies
 /node_modules

@@ -6,5 +6,5 @@ Of course, the site doesn't exist yet. But I'm working on it! Check back often.
 
 ## Toolchain
 
-* React
-* React Bootstrap
+-   React
+-   React Bootstrap

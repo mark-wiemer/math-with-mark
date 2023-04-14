@@ -3,37 +3,37 @@ import * as mathjs from 'mathjs';
 import { MathNode, evaluate } from './mathwm';
 
 export enum RuleID {
-  None,
-  Arithmetic,
-  ProductOfOneVariable,
-  PowerToPower,
+    None,
+    Arithmetic,
+    ProductOfOneVariable,
+    PowerToPower,
 }
 
 export interface Rule {
-  func: (n: MathNode) => MathNode;
-  name: string;
-  latex?: string;
+    func: (n: MathNode) => MathNode;
+    name: string;
+    latex?: string;
 }
 
 export const RULES: Record<RuleID, Rule> = {
-  [RuleID.None]: {
-    func: (n) => n,
-    name: 'Initial expression',
-  },
-  [RuleID.Arithmetic]: {
-    func: evaluateArithmetic,
-    name: 'Arithmetic',
-  },
-  [RuleID.ProductOfOneVariable]: {
-    func: productOfOneVariable,
-    name: 'Product of one Variable',
-    latex: 'a^b\\cdot a^c=a^{b+c}',
-  },
-  [RuleID.PowerToPower]: {
-    func: powerToPower,
-    name: 'Power to power',
-    latex: '(a^b)^c=a^{bc}',
-  },
+    [RuleID.None]: {
+        func: (n) => n,
+        name: 'Initial expression',
+    },
+    [RuleID.Arithmetic]: {
+        func: evaluateArithmetic,
+        name: 'Arithmetic',
+    },
+    [RuleID.ProductOfOneVariable]: {
+        func: productOfOneVariable,
+        name: 'Product of one Variable',
+        latex: 'a^b\\cdot a^c=a^{b+c}',
+    },
+    [RuleID.PowerToPower]: {
+        func: powerToPower,
+        name: 'Power to power',
+        latex: '(a^b)^c=a^{bc}',
+    },
 };
 
 /**
@@ -43,15 +43,15 @@ export const RULES: Record<RuleID, Rule> = {
  * @return the arithmetically evaluated expression
  */
 export function evaluateArithmetic(node: MathNode): MathNode {
-  // if can be arithmetically evaluated
-  // and none of its children are division nodes
-  let arithmeticEvaluation = evaluate(node, true);
-  let noDivision = node.toString().indexOf('/') === -1;
-  if (noDivision) {
-    return arithmeticEvaluation;
-  } else {
-    return node;
-  }
+    // if can be arithmetically evaluated
+    // and none of its children are division nodes
+    let arithmeticEvaluation = evaluate(node, true);
+    let noDivision = node.toString().indexOf('/') === -1;
+    if (noDivision) {
+        return arithmeticEvaluation;
+    } else {
+        return node;
+    }
 }
 
 /**
@@ -63,26 +63,27 @@ export function evaluateArithmetic(node: MathNode): MathNode {
  * expression, else returns `node`.
  */
 function productOfOneVariable(node: MathNode): MathNode {
-  const myNode = node as mathjs.OperatorNode;
-  const leftChild = myNode.args?.[0] as mathjs.OperatorNode;
-  const rightChild = myNode.args?.[1] as mathjs.OperatorNode;
+    const myNode = node as mathjs.OperatorNode;
+    const leftChild = myNode.args?.[0] as mathjs.OperatorNode;
+    const rightChild = myNode.args?.[1] as mathjs.OperatorNode;
 
-  // If this is not a product of two exponentiations, do nothing
-  if (myNode.op !== '*' || leftChild?.op !== '^' || rightChild?.op !== '^')
+    // If this is not a product of two exponentiations, do nothing
+    if (myNode.op !== '*' || leftChild?.op !== '^' || rightChild?.op !== '^')
+        return myNode;
+
+    let leftVariable = (leftChild.args[0] as mathjs.SymbolNode).name;
+    let rightVariable = (rightChild.args[0] as mathjs.SymbolNode).name;
+    // If both variables are defined and equal
+    if (leftVariable !== undefined && leftVariable === rightVariable) {
+        let leftExponent: number = (leftChild.args[1] as mathjs.ConstantNode)
+            .value;
+        let rightExponent: number = (rightChild.args[1] as mathjs.ConstantNode)
+            .value;
+        let nodeStr = `${leftVariable} ^ (${leftExponent} + ${rightExponent})`;
+        return mathjs.parse(nodeStr);
+    }
+
     return myNode;
-
-  let leftVariable = (leftChild.args[0] as mathjs.SymbolNode).name;
-  let rightVariable = (rightChild.args[0] as mathjs.SymbolNode).name;
-  // If both variables are defined and equal
-  if (leftVariable !== undefined && leftVariable === rightVariable) {
-    let leftExponent: number = (leftChild.args[1] as mathjs.ConstantNode).value;
-    let rightExponent: number = (rightChild.args[1] as mathjs.ConstantNode)
-      .value;
-    let nodeStr = `${leftVariable} ^ (${leftExponent} + ${rightExponent})`;
-    return mathjs.parse(nodeStr);
-  }
-
-  return myNode;
 }
 
 /**
@@ -94,15 +95,15 @@ function productOfOneVariable(node: MathNode): MathNode {
  * expression, else returns `node`.
  */
 function powerToPower(node: MathNode): MathNode {
-  const myNode = node as mathjs.OperatorNode;
-  const leftChild = myNode.args?.[0] as mathjs.ParenthesisNode;
-  const leftContent = leftChild?.content as mathjs.OperatorNode;
+    const myNode = node as mathjs.OperatorNode;
+    const leftChild = myNode.args?.[0] as mathjs.ParenthesisNode;
+    const leftContent = leftChild?.content as mathjs.OperatorNode;
 
-  if (myNode.op !== '^' || leftContent?.op !== '^') return node;
+    if (myNode.op !== '^' || leftContent?.op !== '^') return node;
 
-  let base: string = `${leftContent.args[0].toString()}`;
-  let lowerPower: string = `${leftContent.args[1].toString()}`;
-  let upperPower: string = `${myNode.args[1]}`;
-  let newMathText = `${base} ^ (${lowerPower} * ${upperPower})`;
-  return mathjs.parse(newMathText);
+    let base: string = `${leftContent.args[0].toString()}`;
+    let lowerPower: string = `${leftContent.args[1].toString()}`;
+    let upperPower: string = `${myNode.args[1]}`;
+    let newMathText = `${base} ^ (${lowerPower} * ${upperPower})`;
+    return mathjs.parse(newMathText);
 }

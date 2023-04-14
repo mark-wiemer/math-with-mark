@@ -5,8 +5,8 @@ import * as rules from './rules';
 export type MathNode = mathjs.MathNode;
 
 export interface Step {
-  node: MathNode;
-  ruleID: rules.RuleID;
+    node: MathNode;
+    ruleID: rules.RuleID;
 }
 
 /**
@@ -18,16 +18,16 @@ export interface Step {
  * return original expression
  */
 export function evaluate(node: MathNode, arithmetic: boolean): MathNode {
-  try {
-    // stringify, apply function, stringify result, parse stringified result
-    const nodeStr = node.toString();
-    const resultString = (
-      arithmetic ? mathjs.evaluate(nodeStr) : mathjs.simplify(nodeStr)
-    ).toString();
-    return mathjs.parse(resultString);
-  } catch (err) {
-    return node;
-  }
+    try {
+        // stringify, apply function, stringify result, parse stringified result
+        const nodeStr = node.toString();
+        const resultString = (
+            arithmetic ? mathjs.evaluate(nodeStr) : mathjs.simplify(nodeStr)
+        ).toString();
+        return mathjs.parse(resultString);
+    } catch (err) {
+        return node;
+    }
 }
 
 /**
@@ -39,34 +39,34 @@ export function evaluate(node: MathNode, arithmetic: boolean): MathNode {
  * returns `mathText` as given
  */
 export function applyRule(node: MathNode, rule: rules.RuleID): MathNode {
-  return node.transform(rules.RULES[rule].func);
+    return node.transform(rules.RULES[rule].func);
 }
 
 export function texToMath(tex: string): string {
-  tex = tex.split('{').join('(');
-  tex = tex.split('}').join(')');
-  tex = tex.split('\\left').join('');
-  tex = tex.split('\\right').join('');
-  tex = tex.split(/\\cdot ?/).join(' * ');
-  return tex;
+    tex = tex.split('{').join('(');
+    tex = tex.split('}').join(')');
+    tex = tex.split('\\left').join('');
+    tex = tex.split('\\right').join('');
+    tex = tex.split(/\\cdot ?/).join(' * ');
+    return tex;
 }
 
 export const texToNode = (tex: string): mathjs.MathNode | null => {
-  try {
-    return mathjs.parse(texToMath(tex));
-  } catch (err) {
-    return null;
-  }
+    try {
+        return mathjs.parse(texToMath(tex));
+    } catch (err) {
+        return null;
+    }
 };
 
 export function tryParse(mathText: string): MathNode | null {
-  if (mathText.trim() === '') return null;
-  try {
-    let node = mathjs.parse(mathText);
-    return node;
-  } catch (err) {
-    return null;
-  }
+    if (mathText.trim() === '') return null;
+    try {
+        let node = mathjs.parse(mathText);
+        return node;
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -78,25 +78,25 @@ export function tryParse(mathText: string): MathNode | null {
  * @param node
  */
 export function steps(node: MathNode): Step[] {
-  let steps: Step[] = [{ node, ruleID: rules.RuleID.None }];
-  let done = false;
-  while (!done) {
-    done = true; // assume no rule will further simplify the expression
-    let lastNode: MathNode = steps[steps.length - 1].node;
-    const rulesInSimplestFirstOrder = [
-      rules.RuleID.Arithmetic,
-      rules.RuleID.ProductOfOneVariable,
-      rules.RuleID.PowerToPower,
-    ];
-    for (let rule of rulesInSimplestFirstOrder) {
-      let transformed = applyRule(lastNode, rule);
-      if (transformed.toString() !== lastNode.toString()) {
-        done = false;
-        steps.push({ node: transformed, ruleID: rule });
-        break; // restart from beginning of list with new lastNode
-      }
+    let steps: Step[] = [{ node, ruleID: rules.RuleID.None }];
+    let done = false;
+    while (!done) {
+        done = true; // assume no rule will further simplify the expression
+        let lastNode: MathNode = steps[steps.length - 1].node;
+        const rulesInSimplestFirstOrder = [
+            rules.RuleID.Arithmetic,
+            rules.RuleID.ProductOfOneVariable,
+            rules.RuleID.PowerToPower,
+        ];
+        for (let rule of rulesInSimplestFirstOrder) {
+            let transformed = applyRule(lastNode, rule);
+            if (transformed.toString() !== lastNode.toString()) {
+                done = false;
+                steps.push({ node: transformed, ruleID: rule });
+                break; // restart from beginning of list with new lastNode
+            }
+        }
     }
-  }
 
-  return steps;
+    return steps;
 }
