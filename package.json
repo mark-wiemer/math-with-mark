@@ -1,58 +1,26 @@
 {
-  "name": "math-with-mark",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@matejmazur/react-katex": "^3.1.3",
-    "@types/node": "^16.18.12",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
-    "@vitejs/plugin-react": "^3.1.0",
-    "better-react-mathjax": "^2.0.2",
-    "mathjs": "^11.8.0",
-    "node": "^18.14.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-mathquill": "^1.0.3",
-    "serve": "^14.2.4",
-    "typescript": "^5.0.4",
-    "vite": "^4.5.14",
-    "web-vitals": "^2.1.4"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.32.3",
-    "gh-pages": "^5.0.0",
-    "happy-dom": "^15.10.2",
-    "playwright": "^1.32.3",
-    "vitest": "^0.30.1"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "start": "vite",
-    "start//": "echo Compiles with Vite and serves on port 5173",
-    "build": "tsc && vite build",
-    "test": "vitest",
-    "validate": "npm run test -- --run && npm run e2e",
-    "e2e": "playwright test",
-    "serve-build": "serve -s dist",
-    "serve-build//": "echo Builds and serves on port 3000",
-    "preserve-build": "npm run build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "homepage": "https://mathwithmark.com"
+    "type": "module",
+    "scripts": {
+        "format": "prettier --check .",
+        "format:fix": "prettier --write .",
+        "lint": "eslint",
+        "sort-package-json": "sort-package-json --check",
+        "sort-package-json:fix": "sort-package-json",
+        "start": "http-server site -o",
+        "validate": "npm run sort-package-json && npm run format && npm run lint",
+        "validate:fix": "npm run sort-package-json:fix && npm run format:fix && npm run lint"
+    },
+    "prettier": {
+        "printWidth": 100,
+        "tabWidth": 4
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.37.0",
+        "@types/node": "^22.15.32",
+        "eslint": "^9.37.0",
+        "globals": "^16.4.0",
+        "http-server": "^14.1.1",
+        "prettier": "^3.5.3",
+        "sort-package-json": "^2.12.0"
+    }
 }
