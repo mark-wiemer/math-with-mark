@@ -1,0 +1,120 @@
+body {
+    /* Add 1em below to allow user to sanity-check it's the true end-of-page */
+    /* Use margin instead of padding as most user agents have a margin we don't want */
+    margin: 0 0 1em 0;
+    font-family:
+        "Segoe UI",
+        "Segoe UI Web (West European)",
+        -apple-system,
+        BlinkMacSystemFont,
+        Roboto,
+        "Helvetica Neue",
+        sans-serif;
+    font-size: 18px;
+    line-height: 1.5em;
+    @media (prefers-color-scheme: dark) {
+        background-color: black;
+        color: gainsboro;
+    }
+}
+
+figcaption {
+    font-size: smaller;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+}
+
+figure {
+    margin: 0;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & hr {
+        width: 640px;
+    }
+}
+
+hr {
+    width: 320px;
+    max-width: calc(100% - 64px);
+}
+
+a {
+    text-decoration: underline;
+    border-radius: 5px;
+
+    /* See docs/tests.md for link state test matrix */
+    color: rgb(9 115 131);
+    &:hover {
+        outline: 2px solid rgb(9 115 131);
+    }
+    &:visited {
+        color: rgb(107, 2, 107);
+    }
+    &:visited:hover {
+        outline: 2px solid rgb(107, 2, 107);
+    }
+    &:visited:active {
+        outline: 2px solid black;
+        color: black;
+    }
+    &:active {
+        outline: 2px solid black;
+        color: black;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: rgb(0, 162, 174);
+        &:hover {
+            outline: 2px solid rgb(0, 162, 174);
+        }
+        &:visited {
+            color: rgb(219, 8, 219);
+        }
+        &:visited:hover {
+            outline: 2px solid rgb(219, 8, 219);
+        }
+        &:visited:active {
+            outline: 2px solid gainsboro;
+            color: gainsboro;
+        }
+        &:active {
+            outline: 2px solid gainsboro;
+            color: gainsboro;
+        }
+    }
+}
+
+/* Apply to divs to get center margin */
+.article {
+    margin: 0 auto;
+    max-width: 640px;
+    @media (max-width: 640px) {
+        /* Adjust vertical padding as well, generally "cozier" view */
+        padding: 4px;
+        max-width: calc(100vw - 24px);
+    }
+    h1 {
+        font-weight: 600;
+        line-height: 52px;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+    img {
+        max-width: 640px;
+        border-radius: 5%;
+    }
+    figure img {
+        max-width: 100%;
+    }
+}

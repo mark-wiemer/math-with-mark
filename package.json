@@ -1,0 +1,26 @@
+{
+    "type": "module",
+    "scripts": {
+        "format": "prettier --check .",
+        "format:fix": "prettier --write .",
+        "lint": "eslint",
+        "sort-package-json": "sort-package-json --check",
+        "sort-package-json:fix": "sort-package-json",
+        "start": "http-server site -o",
+        "validate": "npm run sort-package-json && npm run format && npm run lint",
+        "validate:fix": "npm run sort-package-json:fix && npm run format:fix && npm run lint"
+    },
+    "prettier": {
+        "printWidth": 100,
+        "tabWidth": 4
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.37.0",
+        "@types/node": "^22.15.32",
+        "eslint": "^9.37.0",
+        "globals": "^16.4.0",
+        "http-server": "^14.1.1",
+        "prettier": "^3.5.3",
+        "sort-package-json": "^2.12.0"
+    }
+}
